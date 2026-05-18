@@ -1,0 +1,33 @@
+body {
+  margin: 0;
+  background: #0f172a;
+  color: #fff;
+  font-family: sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.board {
+  background: #1e293b;
+  padding: 30px;
+  border-radius: 15px;
+  width: 320px;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+h1 {
+  margin-bottom: 20px;
+}
+
+#area {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.data {
+  font-size: 20px;
+  margin: 8px 0;
+}
