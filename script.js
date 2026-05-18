@@ -12,8 +12,9 @@ let cachedData = null;
 // ===== 最新データ取得（変更なし） =====
 async function fetchWeather() {
   try {
-    const timeText = await fetch("https://www.jma.go.jp/bosai/amedas/data/latest_time.txt")
-      .then(res => res.text());
+    const timeText = await fetch(
+      "https://www.jma.go.jp/bosai/amedas/data/latest_time.txt"
+    ).then(res => res.text());
 
     const time = timeText.replace(/[-:T+]/g, "").slice(0, 14);
 
@@ -27,7 +28,7 @@ async function fetchWeather() {
   }
 }
 
-// ===== 表示更新 =====
+// ===== 表示更新（変更なし） =====
 function updateDisplay() {
   if (!cachedData) return;
 
@@ -48,7 +49,7 @@ function updateDisplay() {
   index = (index + 1) % AREAS.length;
 }
 
-// ===== 初期化 =====
+// ===== 初期化（変更なし） =====
 async function init() {
   await fetchWeather();
   updateDisplay();
@@ -56,8 +57,5 @@ async function init() {
 
 init();
 
-// ===== 10秒ごとに表示切替 =====
 setInterval(updateDisplay, 10000);
-
-// ===== 5分ごとにデータ更新 =====
 setInterval(fetchWeather, 1 * 60 * 1000);
