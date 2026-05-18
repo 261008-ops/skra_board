@@ -54,10 +54,10 @@ h1 {
 <script>
 // ===== 千葉の観測所（ちゃんと存在するID） =====
 const AREAS = [
-  { name: "野田方面", id: "45132" },   // 佐原
-  { name: "銚子方面", id: "45301" },   // 銚子
-  { name: "成田方面", id: "45212" },   // 成田
-  { name: "市原方面", id: "45147" }    // 千葉
+  { name: "佐倉方面", id: "45116" },   // 佐原
+  { name: "銚子方面", id: "45148" },   // 銚子
+  { name: "成田方面", id: "45121" },   // 成田
+  { name: "千葉方面", id: "45212" }    // 千葉
 ];
 
 let index = 0;
@@ -117,7 +117,7 @@ init();
 setInterval(updateDisplay, 10000);
 
 // ===== 5分ごとにデータ更新 =====
-setInterval(fetchWeather, 5 * 60 * 1000);
+setInterval(fetchWeather, 1 * 60 * 1000);
 </script>
 
 </body>
