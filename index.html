@@ -1,81 +1,123 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <title>リアルタイム気象データ</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      background: #0f172a;
-      color: #e2e8f0;
-      text-align: center;
-      padding: 20px;
-    }
-    .box {
-      background: #1e293b;
-      padding: 20px;
-      border-radius: 10px;
-      display: inline-block;
-      margin-top: 20px;
-    }
-    .big {
-      font-size: 2em;
-      margin: 10px 0;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>千葉県 天気掲示板（完全版）</title>
+
+<style>
+body {
+  margin: 0;
+  background: #0f172a;
+  color: #fff;
+  font-family: sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.board {
+  background: #1e293b;
+  padding: 30px;
+  border-radius: 15px;
+  width: 320px;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+h1 {
+  margin-bottom: 20px;
+}
+
+#area {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.data {
+  font-size: 20px;
+  margin: 8px 0;
+}
+</style>
 </head>
+
 <body>
 
-  <h1>🌦️ リアルタイム気象データ</h1>
-
-  <div class="box">
-    <div>観測時刻</div>
-    <div id="time" class="big">--</div>
-
-    <div>気温</div>
-    <div id="temp" class="big">-- ℃</div>
-
-    <div>降水量</div>
-    <div id="rain" class="big">-- mm</div>
-
-    <div>風速</div>
-    <div id="wind" class="big">-- m/s</div>
-  </div>
+<div class="board">
+  <h1>千葉県 天気情報</h1>
+  <div id="area">読み込み中...</div>
+  <div id="temp" class="data">気温: -- ℃</div>
+  <div id="rain" class="data">降水量: -- mm</div>
+  <div id="wind" class="data">風速: -- m/s</div>
+</div>
 
 <script>
-const POINT_ID = "44132"; // ←ここ重要（東京）
+// ===== 千葉の観測所（ちゃんと存在するID） =====
+const AREAS = [
+  { name: "野田方面", id: "45132" },   // 佐原
+  { name: "銚子方面", id: "45301" },   // 銚子
+  { name: "成田方面", id: "45212" },   // 成田
+  { name: "市原方面", id: "45147" }    // 千葉
+];
 
-async function fetchAmedas() {
+let index = 0;
+let cachedData = null;
+
+// ===== 最新データ取得（map API） =====
+async function fetchWeather() {
   try {
     // 最新時刻取得
-    const timeRes = await fetch("https://www.jma.go.jp/bosai/amedas/data/latest_time.txt");
-    const latestTime = await timeRes.text();
+    const timeText = await fetch("https://www.jma.go.jp/bosai/amedas/data/latest_time.txt")
+      .then(res => res.text());
 
-    // データ取得
-    const url = `https://www.jma.go.jp/bosai/amedas/data/point/${POINT_ID}/${latestTime}.json`;
-    const res = await fetch(url);
-    const data = await res.json();
+    // フォーマット変換
+    const time = timeText.replace(/[-:T+]/g, "").slice(0, 14);
 
-    // データは配列形式なので最初の値を使う
-    const firstKey = Object.keys(data)[0];
-    const d = data[firstKey];
+    // 全地点データ取得
+    const url = `https://www.jma.go.jp/bosai/amedas/data/map/${time}.json`;
+    const data = await fetch(url).then(res => res.json());
 
-    // 表示
-    document.getElementById("time").textContent = latestTime;
-    document.getElementById("temp").textContent = (d.temp ? d.temp[0] : "--") + " ℃";
-    document.getElementById("rain").textContent = (d.precipitation10m ? d.precipitation10m[0] : "--") + " mm";
-    document.getElementById("wind").textContent = (d.wind ? d.wind[0] : "--") + " m/s";
+    cachedData = data;
 
   } catch (e) {
-    console.error("エラー:", e);
+    console.error("データ取得失敗", e);
   }
 }
 
-// 初回実行
-fetchAmedas();
+// ===== 表示更新 =====
+function updateDisplay() {
+  if (!cachedData) return;
 
-// 5分ごと更新
-setInterval(fetchAmedas, 5 * 60 * 1000);
+  const area = AREAS[index];
+  const d = cachedData[area.id];
+
+  document.getElementById("area").textContent = area.name;
+
+  document.getElementById("temp").textContent =
+    "気温: " + (d?.temp ? d.temp[0] : "--") + " ℃";
+
+  document.getElementById("rain").textContent =
+    "降水量: " + (d?.precipitation10m ? d.precipitation10m[0] : "--") + " mm";
+
+  document.getElementById("wind").textContent =
+    "風速: " + (d?.wind ? d.wind[0] : "--") + " m/s";
+
+  index = (index + 1) % AREAS.length;
+}
+
+// ===== 初期化 =====
+async function init() {
+  await fetchWeather();
+  updateDisplay();
+}
+
+init();
+
+// ===== 10秒ごとに表示切替 =====
+setInterval(updateDisplay, 10000);
+
+// ===== 5分ごとにデータ更新 =====
+setInterval(fetchWeather, 5 * 60 * 1000);
 </script>
 
 </body>
