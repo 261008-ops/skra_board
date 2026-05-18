@@ -3,12 +3,19 @@ body {
   background: #0f172a;
   color: #fff;
   font-family: sans-serif;
+}
+
+/* 横並びレイアウト */
+.container {
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 30px;
   height: 100vh;
+  padding: 20px;
 }
 
+/* 天気ボード */
 .board {
   background: #1e293b;
   padding: 30px;
@@ -30,4 +37,37 @@ h1 {
 .data {
   font-size: 20px;
   margin: 8px 0;
+}
+
+/* 画像 */
+.image-box {
+  width: 300px;
+  height: auto;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.4);
+}
+
+/* 画像本体 */
+.image-box img {
+  width: 100%;
+  display: block;
+  transition: transform 0.4s ease;
+  cursor: pointer;
+}
+
+/* ホバーで拡大 */
+.image-box img:hover {
+  transform: scale(1.2);
+}
+
+/* スマホ対応（縦並び） */
+@media (max-width: 700px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .image-box {
+    width: 90%;
+  }
 }
