@@ -2,18 +2,29 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>千葉県 天気掲示板（完全版）</title>
+<title>千葉県 天気掲示板</title>
+
 <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<div class="board">
-  <h1>千葉県 天気情報</h1>
-  <div id="area">読み込み中...</div>
-  <div id="temp" class="data">気温: -- ℃</div>
-  <div id="rain" class="data">降水量: -- mm</div>
-  <div id="wind" class="data">風速: -- m/s</div>
+<div class="container">
+
+  <!-- 天気ボード -->
+  <div class="board">
+    <h1>千葉県 天気情報</h1>
+    <div id="area">読み込み中...</div>
+    <div id="temp" class="data">気温: -- ℃</div>
+    <div id="rain" class="data">降水量: -- mm</div>
+    <div id="wind" class="data">風速: -- m/s</div>
+  </div>
+
+  <!-- 画像エリア（追加） -->
+  <div class="image-box">
+    <img src="your-image.jpg" alt="表示画像">
+  </div>
+
 </div>
 
 <script src="script.js"></script>
